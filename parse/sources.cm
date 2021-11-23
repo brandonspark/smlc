@@ -1,0 +1,14 @@
+Group
+  structure Token
+  structure Lexer
+
+  structure Parser
+  structure Syntax
+is
+  $SMLNJ-BASIS/basis.cm
+  ../lex/sources.cm
+
+  syntax.sml
+
+  parsemain.cmyacc.sml
+  parser.sml

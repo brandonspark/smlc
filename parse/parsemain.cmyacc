@@ -1,0 +1,161 @@
+sml
+name ParseMainFun
+
+terminal NUMLIT of int
+terminal STRLIT of string
+terminal CHARLIT of char
+terminal BOOLLIT of bool
+terminal IDENT of string
+terminal TYLIT of ty
+terminal TYVAR of string
+
+terminal LPAREN
+terminal RPAREN
+terminal LBRACE
+terminal RBRACE
+terminal LBRACKET
+terminal RBRACKET
+terminal EQUAL
+terminal SEMICOLON
+terminal COLON
+terminal CONS
+
+terminal UNDERSCORE
+terminal COMMA
+
+terminal SWITCH
+terminal CASE
+terminal RETURN
+
+terminal ASTERISK
+terminal PLUS
+terminal MINUS
+terminal SLASH
+terminal TILDE
+terminal LT
+terminal GT
+terminal LTE
+terminal GTE
+terminal NEQUAL
+terminal EQUALEQUAL
+terminal ARROW precr 1
+
+terminal PARSE_PROG
+terminal PARSE_REPL
+
+nonterminal TypeSeq : typeseq =
+  1:TypeAtom => typeseq_sing
+  1:TypeAtom COMMA 2:TypeSeq => typeseq_cons
+
+nonterminal TypeAtom : typee =
+  1:TYLIT => type_lit
+  1:TYVAR => type_tyvar
+  LPAREN 1:TypeSeq RPAREN => type_prod
+
+nonterminal Type : typee =
+  1:TypeAtom => type_id
+  1:Type 2:IDENT => type_constr
+  LPAREN 1:Type ARROW 2:Type RPAREN => type_arrow
+
+nonterminal ArgSeq : argseq =
+  /* epsilon */ => argseq_nil
+  1:Type 2:IDENT => argseq_sing
+  1:Type 2:IDENT COMMA 3:ArgSeq => argseq_cons
+
+nonterminal Dec : dec =
+  1:Type 2:IDENT EQUAL 3:Exp SEMICOLON => dec_basic
+  1:Type 2:IDENT LPAREN 3:ArgSeq RPAREN LBRACE
+    4:DecSeq RETURN 5:Exp SEMICOLON
+  RBRACE SEMICOLON => dec_fun
+
+nonterminal DecSeq : decseq =
+  /* epsilon */ => decseq_nil
+  1:Dec 2:DecSeq => decseq_cons
+
+nonterminal Case : casee =
+  CASE 1:Pat COLON 2:Exp => casee_mk
+
+nonterminal CaseSeq : caseseq =
+  1:Case => caseseq_sing
+  1:Case 2:CaseSeq => caseseq_cons
+
+nonterminal PatSeq : patseq =
+  1:Pat => patseq_sing
+  1:Pat COMMA 2:PatSeq => patseq_cons
+
+nonterminal PatAtom : pat =
+  UNDERSCORE => pat_wild
+  1:IDENT => pat_ident
+  1:NUMLIT => pat_numlit
+  1:STRLIT => pat_strlit
+  1:CHARLIT => pat_charlit
+  1:BOOLLIT => pat_boollit
+  LPAREN 1:PatSeq RPAREN => pat_tuple
+  LBRACKET RBRACKET => pat_nil
+
+nonterminal PatApp : pat =
+  1:PatAtom => pat_id
+  1:IDENT 2:PatAtom => pat_app
+
+nonterminal Pat : pat =
+  1:PatApp => pat_id
+  1:PatApp CONS 2:Pat => pat_cons
+
+nonterminal ExpSeq : expseq =
+  1:Exp COMMA 2:Exp => expseq_mk
+  1:Exp COMMA 2:ExpSeq => expseq_cons
+
+nonterminal ExpAtom : exp =
+  LPAREN 1:Exp RPAREN => exp_id
+  LPAREN 1:ExpSeq RPAREN => exp_tuple
+  1:NUMLIT => exp_numlit
+  1:STRLIT => exp_strlit
+  1:CHARLIT => exp_charlit
+  1:BOOLLIT => exp_boollit
+  1:IDENT => exp_ident
+  TILDE 1:ExpAtom => exp_neg
+  LBRACKET RBRACKET => exp_nil
+
+nonterminal ExpApp : exp =
+  1:ExpAtom => exp_id
+  1:ExpApp 2:ExpAtom => exp_app
+
+nonterminal ExpTimesDivide : exp =
+  1:ExpApp => exp_id
+  1:ExpTimesDivide ASTERISK 2:ExpApp => exp_times
+  1:ExpTimesDivide SLASH 2:ExpApp => exp_divide
+  1:ExpTimesDivide LT 2:ExpApp => exp_lt
+  1:ExpTimesDivide GT 2:ExpApp => exp_gt
+  1:ExpTimesDivide LTE 2:ExpApp => exp_lte
+  1:ExpTimesDivide GTE 2:ExpApp => exp_gte
+  1:ExpTimesDivide NEQUAL 2:ExpApp => exp_nequal
+  1:ExpTimesDivide EQUALEQUAL 2:ExpApp => exp_equalequal
+
+nonterminal ExpPlusMinus : exp =
+  1:ExpTimesDivide => exp_id
+  1:ExpPlusMinus PLUS 2:ExpTimesDivide => exp_plus
+  1:ExpPlusMinus MINUS 2:ExpTimesDivide => exp_minus
+
+nonterminal ExpCons : exp =
+  1:ExpPlusMinus => exp_id
+  1:ExpPlusMinus CONS 2:ExpCons => exp_cons
+
+nonterminal Exp : exp =
+  1:ExpCons => exp_id
+  LBRACE 1:DecSeq RETURN 2:Exp SEMICOLON RBRACE => exp_let
+  SWITCH 1:Exp LBRACE
+    2:CaseSeq
+  RBRACE => exp_case
+
+nonterminal TopRepl : toprepl =
+  1:Dec => toprepl_valdec
+  1:Exp SEMICOLON => toprepl_exp
+
+nonterminal TopProg : topprog =
+  1:DecSeq => topprog_decs
+
+nonterminal Top : directive =
+  PARSE_PROG 1:TopProg => top_prog
+  PARSE_REPL 1:TopRepl => top_repl
+
+start Top

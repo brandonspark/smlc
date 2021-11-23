@@ -1,0 +1,6 @@
+Group
+is
+  $SMLNJ-LIB/Util/smlnj-lib.cm
+  $SMLNJ-BASIS/basis.cm
+  ../parse/sources.cm
+  finish.sml

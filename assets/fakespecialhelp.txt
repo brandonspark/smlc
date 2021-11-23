@@ -1,0 +1,12 @@
+Standard ML of New Jersey (64-bit) v110.99 [built: Tue Sep 14 17:14:12 2021]
+sml [rtsargs] [options] [files]
+
+  Here is a list of all the special commands added in the most recent
+  extension of the Standard ML of New Jersey compiler:
+
+  options:
+    --companies                       (display list of industry users of Standard ML)
+    --why-is-150-better-than-122                                    (make Iliano cry)
+    --steve                           (STEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEVE)
+    --favorite-ta      (display the Standard ML of New Jersey compiler's favorite TA)
+

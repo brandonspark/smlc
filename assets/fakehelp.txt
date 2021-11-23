@@ -1,0 +1,40 @@
+Standard ML of New Jersey (64-bit) v110.99 [built: Tue Sep 14 17:14:12 2021]
+sml [rtsargs] [options] [files]
+
+  rtsargs:
+    @SMLversion      (echo the version of SML/NJ then exit)
+    @SMLload=<h>     (load specified heap image)
+    @SMLcmdname=<n>  (set command name)
+    @SMLsuffix       (echo heap suffix for the system then exit)
+    @SMLalloc=<s>    (specify size of allocation area)
+    @SMLrun=<rt>     (specify runtime system)
+    @SMLquiet        (load heap image silently)
+    @SMLverbose      (show heap image load progress)
+    @SMLobjects      (show list of executable objects)
+    @SMLdebug=<f>    (write debugging info to file)
+
+  options:
+    -D<name>=<v>     (set CM variable to given value)
+    -D<name>         (set CM variable to 1)
+    -Uname           (unset CM variable)
+    -C<control>=<v>  (set named control)
+    -H               (produce complete help listing)
+    -h               (produce minimal help listing)
+    -h<level>        (help with obscurity limit)
+    -S               (list all current settings)
+    -s<level>        (limited list of settings)
+    -E               (list all environment variables)
+    -e<level>        (list limited list of environment variables)
+    --c_syntax<flag> (enable C-like syntax)
+    --companies      (display list of industry users of Standard ML)
+
+
+  files:
+    <file>.cm        (CM.make or CM.autoload)
+    -m               (switch to CM.make)
+    -a               (switch to CM.autoload; default)
+    <file>.sig       (use)
+    <file>.sml       (use)
+    <file>.fun       (use)
+  SML/NJ controls:
+   Compilation Manager (CM):

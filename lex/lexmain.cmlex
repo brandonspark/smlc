@@ -1,0 +1,90 @@
+sml
+name LexMainFun
+alphabet 128
+
+set whitespace = (or 32 9 13 10)
+set whitechar = (or 32 9 10) /* space, tab, lf */
+set digit = (range '0 '9)
+set letter = (range 'A 'Z 'a 'z)
+set alphanumeric = (or letter digit '_ '')
+set newline = (| 10 12 13)
+
+set printable = (range 32 126)
+set stringelem = (- printable '" '\)
+set comment_normal = (~ '/ '*)
+
+regexp ident = (seq letter (* alphanumeric))
+
+function lex : t =
+  '( => lparen
+  ') => rparen
+  '{ => lbrace
+  '} => rbrace
+  '[ => lbracket
+  '] => rbracket
+  ': => colon
+  "::" => cons
+  '; => semicolon
+  "->" => arrow
+  '* => asterisk
+  '+ => plus
+  '- => minus
+  '/ => slash
+  '< => lt
+  '> => gt
+  "<=" => lte
+  ">=" => gte
+  '~ => tilde
+  ', => comma
+  '= => equal
+  "==" => equal_equal
+  "!=" => not_equal
+  '_ => underscore
+  (seq '' (+ letter)) => tyvar
+  ident => ident
+  (seq '# (+ alphanumeric)) => select
+
+  (+ digit) => number
+
+  (+ whitechar) => skip
+  newline => skip_newline
+  eos => eof
+  '" => enter_string
+
+  "/*" => enter_comment
+  "//" => enter_comment_nl
+  (seq '# '") => enter_char
+
+  epsilon => error
+
+function comment : u =
+  "/*" => reenter_comment
+  "*/" => exit_comment
+
+  '/ => comment_skip
+  '* => comment_skip
+
+  (+ comment_normal) => comment_skip
+
+  eos => unclosed_comment
+  epsilon => comment_error
+
+set comment_norm = (~ '\ 'n 10)
+
+function comment_nl : u =
+  10 => exit_comment
+  (+ comment_norm) => comment_skip
+  eos => exit_comment
+  epsilon => comment_error
+
+function string : v =
+  (+ stringelem) => string_elem
+
+  "\n" => string_newline
+  (seq '\ '") => string_quote
+  (seq '\ (+ whitespace) '\) => string_skip
+
+  '" => exit_string
+
+  eos => unclosed_string
+  epsilon => string_error

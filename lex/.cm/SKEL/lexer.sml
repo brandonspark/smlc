@@ -1,0 +1,2 @@
+Skeleton 5
+d2f2ä¢Stream"ä¢Token"ad"Lexer"jh7egp1ÿf1d"List"Caä¢Table"jh1ad"Key"gp1d"StringHashable"gp1e"HashTable"egp1ÿf6d"Char"Cÿ2ÿd"Int"d"String"d"TextIO"Naä¢Arg"è0ad"LexMain"jh2ad"Streamable"gp1d"StreamStreamable"aÿ‚gp1ÿ‚gp1e"LexMainFun"Nÿ‚

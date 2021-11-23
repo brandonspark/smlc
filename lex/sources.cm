@@ -1,0 +1,12 @@
+Group
+  structure Token
+  structure Lexer
+
+  library(../cmlib/cmlib.cm) - structure CommandLine - signature CONT -
+  signature SUSP - signature WEAK - signature COMMAND_LINE
+is
+  ../cmlib/cmlib.cm
+
+  token.sml
+  lexmain.cmlex.sml
+  lexer.sml
